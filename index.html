@@ -36,10 +36,15 @@
       const words = unique(DICT.split("、"));
       let currentIndex = -1;
       nextWord();
-      alert(`点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`)
+      alert(
+        `点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`
+      );
 
-      window.addEventListener("click", onClick);
-      // window.addEventListener("touchstart", onClick);
+      if (platform().isPc) {
+        window.addEventListener("click", onClick);
+      } else {
+        window.addEventListener("touchstart", onClick);
+      }
 
       window.addEventListener("keydown", (e) => {
         const { key } = e;
@@ -60,7 +65,7 @@
       function unique(list) {
         return Array.from(new Set(list));
       }
-      
+
       function enterFullScreen() {
         document.documentElement.requestFullscreen();
       }
@@ -68,6 +73,27 @@
       function updateWord(index) {
         const word = words[index];
         container.textContent = word;
+      }
+
+      function platform() {
+        const ua = navigator.userAgent,
+          isWindowsPhone = /(?:Windows Phone)/.test(ua),
+          isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+          isAndroid = /(?:Android)/.test(ua),
+          isFireFox = /(?:Firefox)/.test(ua),
+          isChrome = /(?:Chrome|CriOS)/.test(ua),
+          isTablet =
+            /(?:iPad|PlayBook)/.test(ua) ||
+            (isAndroid && !/(?:Mobile)/.test(ua)) ||
+            (isFireFox && /(?:Tablet)/.test(ua)),
+          isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+          isPc = !isPhone && !isAndroid && !isSymbian;
+        return {
+          isTablet: isTablet,
+          isPhone: isPhone,
+          isAndroid: isAndroid,
+          isPc: isPc,
+        };
       }
 
       function nextWord() {
