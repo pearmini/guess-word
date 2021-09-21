@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
     <title>Game</title>
     <style>
       * {
@@ -24,95 +24,14 @@
         width: 100%;
         height: 100%;
         font-weight: bold;
+        user-select: none;
       }
     </style>
   </head>
   <body>
-    <div id="word-container"><span>快乐</span></div>
-    <script>
-      const DICT =
-        "北斗星、冰鞋、保温杯、北京烤鸭、北京大学、冰块、棒冰、冰刀、保鲜袋、冰棍、宝岛、冰川、布谷鸟、八哥、背包、厕所、餐馆、衬衣、菜包、彩电、苍蝇、铲子、床头柜、长江、窗、菜刀、大海、短裤、雕塑、地图、电锯、电线、打狗棒、斗牛、大牙、打麻将、凳子、电缆线、豆芽、蛋炒饭、电子词典、豆浆、读卡器、打架、地中海、汉英词典、花车、狐、花瓶、花瓣、火星人、红太狼、虎牙、黄鼠狼、黄马褂、滑板、海水、河马、火柴盒、化妆棉、火炬、红地毯、含羞草、葫芦丝、火影忍者、红眼病、婚礼、黑板、欢乐谷、火车站、黑龙江、火山、海鱼、葫芦丝、黑人牙膏、海绵、红灯、警报器、鲸鱼、积分卡、卷发、金戒指、井、酒杯、金刚、机器猫、鸡冠花、机车、加菲猫、集装箱、假发、解放军、经纬度、竞技、快乐宝贝、蝌蚪、骷髅头、葵花宝典、开心农场、课程表、考试卷、孔明灯、卡通、变色龙、流鼻血、路灯、狼外婆、凉鞋、镰刀、流氓兔、旅行箱、领带、鹿、篮球场、骡子、拉力赛、铃铛、莲藕、理发店、老板";
-      const container = document.querySelector("#word-container > span");
-      const words = unique(DICT.split("、"));
-      let currentIndex = -1;
-      nextWord();
-      alert(
-        `点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`
-      );
-
-      if (platform().isPc) {
-        window.addEventListener("click", onClick);
-      } else {
-        window.addEventListener("touchstart", onClick);
-      }
-
-      window.addEventListener("keydown", (e) => {
-        const { key } = e;
-        if (key === "Enter") {
-          enterFullScreen();
-        }
-      });
-
-      function onClick(e) {
-        const { pageX } = e;
-        if (pageX < window.innerWidth / 2) {
-          previousWord();
-        } else {
-          nextWord();
-        }
-      }
-
-      function unique(list) {
-        return Array.from(new Set(list));
-      }
-
-      function enterFullScreen() {
-        document.documentElement.requestFullscreen();
-      }
-
-      function updateWord(index) {
-        const word = words[index];
-        container.textContent = word;
-      }
-
-      function platform() {
-        const ua = navigator.userAgent,
-          isWindowsPhone = /(?:Windows Phone)/.test(ua),
-          isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
-          isAndroid = /(?:Android)/.test(ua),
-          isFireFox = /(?:Firefox)/.test(ua),
-          isChrome = /(?:Chrome|CriOS)/.test(ua),
-          isTablet =
-            /(?:iPad|PlayBook)/.test(ua) ||
-            (isAndroid && !/(?:Mobile)/.test(ua)) ||
-            (isFireFox && /(?:Tablet)/.test(ua)),
-          isPhone = /(?:iPhone)/.test(ua) && !isTablet,
-          isPc = !isPhone && !isAndroid && !isSymbian;
-        return {
-          isTablet: isTablet,
-          isPhone: isPhone,
-          isAndroid: isAndroid,
-          isPc: isPc,
-        };
-      }
-
-      function nextWord() {
-        currentIndex++;
-        if (currentIndex >= words.length) {
-          alert("没有更多的词了～");
-          return;
-        }
-        updateWord(currentIndex);
-      }
-
-      function previousWord() {
-        currentIndex--;
-        if (currentIndex < 0) {
-          alert("已经第一个词了～");
-          return;
-        }
-        updateWord(currentIndex);
-      }
-    </script>
+    <div id="word-container"><span>预备</span></div>
+    <script src="./dict.js"></script>
+    <script src="./helper.js"></script>
+    <script src="./init.js"></script>
   </body>
 </html>
