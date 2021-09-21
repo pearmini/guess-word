@@ -2,55 +2,24 @@ var container = document.querySelector("#word-container > span");
 var words = unique(DICT);
 var currentIndex = -1;
 
-function debounce(fn) {
-  var timer = null;
+var font = {
+  fontSize: 200,
+  fontFamily: '',
+  fontWeight: 'bold',
+  fontStyle: '',
+  fontVariant: '',
+}
 
-  return function () {
-    clearTimeout(timer);
-
-    timer = setTimeout(() => {
-      fn.apply(this, arguments);
-    }, 100);
-  };
-};
-
-function unique(list) {
-  var arr = [];
-  var map = {};
-  for (let i = 0; i < list.length; i++) {
-    const element = list[i];
-    if (!map[element]) {
-      arr.push(element);
-      map[element] = 1;
-    }
-  }
-  return arr;
+function getTextFontSize(text) {
+  const width = measureTextByDOM(text, font);
+  return window.innerWidth * 0.8 / width * font.fontSize;
 }
 
 function updateWord(index) {
   var word = words[index];
   container.innerHTML = word;
-}
-
-function platform() {
-  var ua = navigator.userAgent,
-    isWindowsPhone = /(?:Windows Phone)/.test(ua),
-    isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
-    isAndroid = /(?:Android)/.test(ua),
-    isFireFox = /(?:Firefox)/.test(ua),
-    isChrome = /(?:Chrome|CriOS)/.test(ua),
-    isTabvar =
-      /(?:iPad|PlayBook)/.test(ua) ||
-      (isAndroid && !/(?:Mobile)/.test(ua)) ||
-      (isFireFox && /(?:Tabvar)/.test(ua)),
-    isPhone = /(?:iPhone)/.test(ua) && !isTabvar,
-    isPc = !isPhone && !isAndroid && !isSymbian;
-  return {
-    isTabvar: isTabvar,
-    isPhone: isPhone,
-    isAndroid: isAndroid,
-    isPc: isPc,
-  };
+  // 自适应字体大小
+  container.style.fontSize = getTextFontSize(word) + 'px';
 }
 
 function nextWord() {
@@ -72,12 +41,12 @@ function previousWord() {
 }
 
 nextWord();
+
 alert(
   `点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`
 );
 
 var onClickWithDebounce = debounce(function onClick(e) {
-  console.log(e);
   if (e.pageX < window.innerWidth / 2) {
     previousWord();
   } else {
@@ -85,6 +54,7 @@ var onClickWithDebounce = debounce(function onClick(e) {
   }
 });
 
+// 事件，pc 和 mobile
 window.addEventListener("click", onClickWithDebounce);
 window.addEventListener("touchstart", onClickWithDebounce);
 
