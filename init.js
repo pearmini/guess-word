@@ -2,30 +2,17 @@ var container = document.querySelector("#word-container > span");
 var words = unique(DICT);
 var currentIndex = -1;
 
-nextWord();
-alert(
-  `点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`
-);
+function debounce(fn) {
+  var timer = null;
 
-if (platform().isPc) {
-  window.addEventListener("click", onClick);
-} else {
-  window.addEventListener("touchstart", onClick);
-}
+  return function () {
+    clearTimeout(timer);
 
-window.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    enterFullScreen();
-  }
-});
-
-function onClick(e) {
-  if (e.pageX < window.innerWidth / 2) {
-    previousWord();
-  } else {
-    nextWord();
-  }
-}
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+    }, 100);
+  };
+};
 
 function unique(list) {
   var arr = [];
@@ -40,13 +27,9 @@ function unique(list) {
   return arr;
 }
 
-function enterFullScreen() {
-  document.documentElement.requestFullscreen();
-}
-
 function updateWord(index) {
   var word = words[index];
-  container.textContent = word;
+  container.innerHTML = word;
 }
 
 function platform() {
@@ -87,3 +70,26 @@ function previousWord() {
   }
   updateWord(currentIndex);
 }
+
+nextWord();
+alert(
+  `点击屏幕右边切换到下一个词，\n点击屏幕左边切换到上一个词，\n目前一共有${words.length}个词语。`
+);
+
+var onClickWithDebounce = debounce(function onClick(e) {
+  console.log(e);
+  if (e.pageX < window.innerWidth / 2) {
+    previousWord();
+  } else {
+    nextWord();
+  }
+});
+
+window.addEventListener("click", onClickWithDebounce);
+window.addEventListener("touchstart", onClickWithDebounce);
+
+window.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    document.documentElement.requestFullscreen();
+  }
+});
